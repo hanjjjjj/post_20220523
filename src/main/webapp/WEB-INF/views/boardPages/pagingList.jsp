@@ -14,6 +14,16 @@
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
 </head>
 <body>
+<div class="container mt-3">
+    <form action="/board/search" method="get">
+        <select name="searchType">
+            <option value="boardTitle">제목</option>
+            <option value="boardWriter">작성자</option>
+        </select>
+        <input type="text" name="q" placeholder="검색어입력...">
+        <input type="submit" value="검색">
+    </form>
+</div>
 <div class="container">
     <table class="table">
         <tr>
