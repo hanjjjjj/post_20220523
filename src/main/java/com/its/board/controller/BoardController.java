@@ -1,6 +1,7 @@
 package com.its.board.controller;
 
 import com.its.board.dto.BoardDTO;
+import com.its.board.dto.PageDTO;
 import com.its.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,9 +44,11 @@ public class BoardController {
     }
     //상세조회
     @GetMapping("/detail")
-    public String findById(@RequestParam("id")Long id, Model model){
+    public String findById(@RequestParam("id")Long id, Model model,
+     @RequestParam(value="page", required = false, defaultValue = "1")int page){
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board",boardDTO);
+        model.addAttribute("page", page);
         return "boardPages/detail";
     }
 
@@ -85,5 +88,17 @@ public class BoardController {
     public String saveFile(@ModelAttribute BoardDTO boardDTO) throws IOException {
         boardService.saveFile(boardDTO);
         return "redirect:/board/findAll";
+    }
+
+    @GetMapping("/paging")
+    // /board/paging?page=1
+    // required=false로 하면/board/paging 요청도 가능
+    // 별도의 페이지 값을 요청하지 않으면 첫페이지(page=1)를 보여주자.
+    public String paging(@RequestParam(value="page", required=false, defaultValue="1") int page, Model model) {
+        List<BoardDTO> boardList = boardService.pagingList(page);
+        PageDTO paging = boardService.paging(page);
+        model.addAttribute("boardList", boardList);
+        model.addAttribute("paging", paging);
+        return "boardPages/pagingList";
     }
 }
